@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<context:component-scan
+		base-package="com.spring.*"></context:component-scan>
+
+
+	<bean id="foMethod" class="com.spring.service.TestInfoMethod"></bean>
+
+	<bean id="before" class="com.spring.info.TestBefore"></bean>
+	<!-- 前置通知配置 -->
+	<aop:config>
+		<aop:pointcut
+			expression="execution(public void com.spring.service.TestInfoMethod.add())"
+			id="pioncat" />
+		<aop:advisor advice-ref="before" pointcut-ref="pioncat" />
+
+	</aop:config>
+
+	<aop:config>
+		<aop:pointcut
+			expression="execution(public void com.spring.service.TestInfoMethod.add())"
+			id="pioncut" />
+		<aop:advisor advice-ref="after" pointcut-ref="pioncut" />
+	</aop:config>
+
+	<aop:config>
+		<aop:pointcut
+			expression="execution(public void com.spring.service.TestInfoMethod.add())"
+			id="pioncut1" />
+		<aop:advisor advice-ref="exection" pointcut-ref="pioncut1" />
+	</aop:config>
+
+	<aop:config>
+		<aop:pointcut
+			expression="execution(public void com.spring.service.TestInfoMethod.add())"
+			id="pioncut2" />
+		<aop:advisor advice-ref="suround" pointcut-ref="pioncut2" />
+	</aop:config>
+	<!-- Aop对注解的支持这是注解形式的配置 -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+	<aop:config>
+	   <aop:pointcut expression="execution(public void com.spring.service.TestInfoMethod.add())" id="schema"/>
+		<aop:aspect ref="schemainfo">
+             <aop:before method="SchemaBefore" pointcut-ref="schema"/>
+             <aop:after-returning method="Schemaafter" pointcut-ref="schema"/> 
+		</aop:aspect>
+	</aop:config>
+
+
+	<bean id="datasource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="123456"></property>
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/mybatis"></property>
+
+	</bean>
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasource"></property>
+	</bean>
+	<!-- 增加对事物的支持 -->
+	<tx:annotation-driven
+		transaction-manager="txManager" />
+
+	<!-- <bean id="student" class="com.spring.entity.Student"> <property name="stuno" 
+		value="12"></property> <property name="stuname" value="zhan"></property> 
+		<property name="stuage" value="12"></property> </bean> <bean id="teacher" 
+		class="com.spring.entity.Teacher"> <property name="tname" value="fengjiadfa"></property> 
+		<property name="tage" value="45"></property> </bean> <bean id="course" class="com.spring.entity.Course"> 
+		<property name="courname" value="mk"></property> <property name="coursehour" 
+		value="26"></property> <property name="teacher" ref="teacher"></property> 
+		</bean> <bean id="student" class="com.spring.entity.Student"> <constructor-arg 
+		value="25"></constructor-arg> <constructor-arg value="zs"></constructor-arg> 
+		<constructor-arg value="36"></constructor-arg> </bean> <bean id="teacher" 
+		class="com.spring.entity.Teacher"> <constructor-arg value="nihi"></constructor-arg> 
+		<constructor-arg value="13"></constructor-arg> </bean> <bean id="course" 
+		class="com.spring.entity.Course" > <constructor-arg value="33" type="int"></constructor-arg> 
+		<constructor-arg value="33" type="int"></constructor-arg> </bean> <bean id="student" 
+		class="com.spring.entity.Student" p:stuage="29" p:stuno="35" p:stuname="opop"> 
+		</bean> <bean id="teacher" class="com.spring.entity.Teacher" p:tage="29" 
+		p:tname="hias"> </bean> <bean id="course" class="com.spring.entity.Course" 
+		p:courname="hutml" p:coursehour="46" p:teacher-ref="teacher"> </bean> <bean 
+		id="conectionAll" class="com.spring.entity.AllConnectionType"> <property 
+		name="list"> <list> <value>足球</value> <value>篮球</value> <value>冰球</value> 
+		</list> </property> <property name="map"> <map> <entry> <key> <value>zuwq</value> 
+		</key> <value>足球2</value> </entry> <entry> <key> <value>lanqiu</value> </key> 
+		<value>篮球2</value> </entry> <entry> <key> <value>bingqiu</value> </key> <value>冰球2</value> 
+		</entry> </map> </property> <property name="array"> <array> <value>足球2</value> 
+		<value>篮球2</value> <value>冰球2</value> </array> </property> <property name="set"> 
+		<set> <value>足球3</value> <value>篮球3</value> <value>冰球3</value> </set> </property> 
+		<property name="pers"> <props> <prop key="foot">足球4</prop> <prop key="foot2">篮球4</prop> 
+		</props> </property> </bean> -->
+</beans>
